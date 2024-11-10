@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sandeep's Professional Portfolio</title> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+</head>
+<body>
+    <nav class="container-fluid">
+        <ul><li><strong>Sandeep's Professional Portfolio</strong></li></ul>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#bio">About</a></li>
+            <li><a href="#services">Our Services</a></li>
+            <li><a href="#pdf-analysis">PDF Analysis</a></li>
+            <li><a href="#contact" role="button">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section>
+            <h2>Welcome to My Professional Space</h2>
+            <p>Explore my projects, expertise, and contact options below.</p>
+        </section>
+
+        <!-- PDF Analysis Section -->
+        <section id="pdf-analysis">
+            <h2>Analyze Your PDFs with ChatGPT</h2>
+            <form id="pdf-upload-form" enctype="multipart/form-data">
+                <label for="pdf-files">Upload PDFs</label>
+                <input type="file" id="pdf-files" name="pdf-files" multiple accept=".pdf">
+                <button type="submit">Upload and Analyze</button>
+            </form>
+            <div id="analysis-output">
+                <h3>Ask Questions about the Uploaded PDFs</h3>
+                <textarea id="user-question" placeholder="Type your question here"></textarea>
+                <button onclick="askChatGPT()">Ask ChatGPT</button>
+                <div id="response"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="container">
+        <small><a href="#bio">About Me</a> • <a href="#contact">Contact</a></small>
+    </footer>
+
+    <script>
+        async function askChatGPT() {
+            const question = document.getElementById("user-question").value;
+            const responseElement = document.getElementById("response");
+            responseElement.innerHTML = "Processing...";
+
+            // Placeholder code for backend interaction
+            // In production, this would send the question to the server which would interact with ChatGPT
+            const response = await fetch('/api/chatgpt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question })
+            });
+            const data = await response.json();
+            responseElement.innerHTML = data.answer;
+        }
+
+        document.getElementById("pdf-upload-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const response = await fetch('/api/upload-pdfs', { method: 'POST', body: formData });
+            if (response.ok) {
+                document.getElementById("analysis-output").innerHTML = "Files uploaded. You can now ask questions.";
+            } else {
+                document.getElementById("analysis-output").innerHTML = "Failed to upload files.";
+            }
+        });
+    </script>
+</body>
+</html>
